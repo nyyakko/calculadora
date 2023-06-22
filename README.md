@@ -12,7 +12,7 @@
 
 # compiling and running
    ``git clone https://github.com/nyyakko/calculadora``\
-   ``cd ./calculadora/``
+   ``cd ./calculadora/``\
    ``python configure.py ; python build.py``
 
    ``./build/calc/calc``
