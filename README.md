@@ -5,10 +5,12 @@
 </p>
 
 # pre-requisites
-* [vcpkg](https://vcpkg.io/);
-* [python](https://www.python.org/downloads/);
-* [cmake](https://cmake.org/);
-* [clang](https://github.com/llvm/llvm-project/) or any other C++23 compliant compiler.
+* [vcpkg](https://vcpkg.io/):
+   *  raylib
+   *  fmtlib
+* [python](https://www.python.org/downloads/)
+* [cmake](https://cmake.org/)
+* [clang](https://github.com/llvm/llvm-project/) or any other C++23 compliant compiler
 
 # compiling and running
    ``git clone https://github.com/nyyakko/calculadora``\
