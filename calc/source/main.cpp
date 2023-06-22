@@ -11,12 +11,11 @@
 #include <iostream>
 #include <stack>
 
-#define OBSIDIAN Color { 31, 31, 31, 255 }
-#define CHARCOAL Color { 24, 24, 24, 255 }
-
-#define FACTOR 40
-#define WIDTH   9 * FACTOR
-#define HEIGHT 16 * FACTOR
+auto static constexpr FACTOR   = 40;
+auto static constexpr WIDTH    = 9 * FACTOR;
+auto static constexpr HEIGHT   = 16 * FACTOR;
+auto static constexpr OBSIDIAN = Color { 31, 31, 31, 255 };
+auto static constexpr CHARCOAL = Color { 24, 24, 24, 255 };
 
 auto main() -> int
 {
@@ -33,6 +32,7 @@ auto main() -> int
         ClearBackground(OBSIDIAN);
         
         ui::layout_begin(ui::Orientation::VERTICAL, { 0, 0, WIDTH, HEIGHT }, 6);
+            
             static std::string prompt {};
             static std::stack<std::string> expressions {};
             
@@ -65,7 +65,7 @@ auto main() -> int
                 ui::gfx::button(ui::layout_slot(), CHARCOAL, RAYWHITE, 24, "="sv, [] ([[maybe_unused]]auto&& value)
                 {
                     logic::Lexer lexer { prompt };
-                    prompt = std::to_string(logic::evaluate(parse(lexer)));
+                    prompt = std::to_string(logic::evaluate(logic::parse(lexer)));
                 });
             ui::layout_end();
             
