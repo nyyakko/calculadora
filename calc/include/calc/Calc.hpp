@@ -26,7 +26,7 @@ public:
 public:
     int run()
     {
-        SetTargetFPS(60);
+        SetTargetFPS(24);
         
         while (!WindowShouldClose())
         {
