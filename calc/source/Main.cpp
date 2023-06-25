@@ -16,8 +16,6 @@
 #endif
 
 #include <minwindef.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, PWSTR, int)
 {
