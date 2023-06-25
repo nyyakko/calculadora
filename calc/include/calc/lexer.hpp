@@ -10,7 +10,7 @@ namespace logic
     enum class TokenType { NUMBER, OPERATOR };
     enum class TokenPrecedence { NONE, TERTIARY, SECONDARY, PRIMARY };
     enum class TokenFixity { LEFT, RIGHT };
-
+//
     struct Token
     {
         TokenType type;

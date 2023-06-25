@@ -13,7 +13,7 @@ static auto operations = std::unordered_map
     std::pair { '*', + [] (float lhs, float rhs) { return lhs * rhs; } },
     std::pair { '/', + [] (float lhs, float rhs) { return lhs / rhs; } },
 };
-
+//
 using namespace logic;
 
 auto Lexer::operator=(Lexer const& lhs) -> Lexer
