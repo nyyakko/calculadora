@@ -13,7 +13,7 @@ auto static constexpr BUTTON_GAP = 4;
 void update([[maybe_unused]]Calc& app)
 {
 }
-//
+
 void render(Calc& app)
 {
     ClearBackground(ui::color::OBSIDIAN);

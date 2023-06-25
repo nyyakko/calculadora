@@ -9,8 +9,6 @@
 #include <string_view>
 #include <stack>
 
-//
-
 #define FNMACRO_BEG do{
 #define FNMACRO_END } while(0)
 

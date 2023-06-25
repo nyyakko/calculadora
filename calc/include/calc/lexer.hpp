@@ -10,7 +10,7 @@ namespace logic
     enum class TokenType { NUMBER, OPERATOR };
     enum class TokenPrecedence { NONE, TERTIARY, SECONDARY, PRIMARY };
     enum class TokenFixity { LEFT, RIGHT };
-//
+    
     struct Token
     {
         TokenType type;
@@ -19,13 +19,13 @@ namespace logic
         
         std::string value;
     };
-
+    
     struct Lexer
     {
         explicit Lexer(std::string const& expression)
             : stream { expression }
         {}
-            
+        
         Lexer(Lexer const& lhs)
             : stream { lhs.stream.str() }
         {}

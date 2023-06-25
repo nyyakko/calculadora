@@ -10,7 +10,7 @@ static inline auto& layout_stack()
     static std::stack<ui::Layout> stack {};
     return stack;
 }
-//
+
 void ui::layout_begin(Orientation orientation, Rectangle container, size_t count)
 {
     Layout layout
