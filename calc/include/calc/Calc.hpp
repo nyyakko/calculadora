@@ -46,6 +46,7 @@ public:
     
     void expression_pop()
     {
+        this->expression = this->expressions.top();
         this->expressions.pop();
     }
     

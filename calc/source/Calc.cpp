@@ -35,45 +35,53 @@ void render(Calc& app)
         
         ui::layout_begin(ui::Orientation::HORIZONTAL, ui::layout_slot(), 2);
         {
-            ui::layout_begin(ui::Orientation::VERTICAL, ui::layout_slot(), 3);
+            if (!app.shiftMode)
             {
-                if (!app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "POP"sv))
+                ui::layout_begin(ui::Orientation::VERTICAL, ui::layout_slot(), 3);
                 {
-                    app.expression_pop();
+                    if (ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "POP"sv))
+                    {
+                        app.expression_pop();
+                    }
+
+                    if(ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "PUSH"sv))
+                    {
+                        app.expression_push();
+                    }
+
+                    if(ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "CLEAR"sv))
+                    {
+                        app.expression_clear();
+                    }
                 }
-                else
+                ui::layout_end();
+            }
+            else
+            {
+                ui::layout_begin(ui::Orientation::VERTICAL, ui::layout_slot(), 4);
                 {
+                    if (app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "SQRT"sv))
+                    {
+                        app.expression_append("SQRT ");
+                    }
+                    
                     if (app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "SIN"sv))
                     {
                         app.expression_append("SIN ");
                     }
-                }
-                
-                if(!app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "PUSH"sv))
-                {
-                    app.expression_push();
-                }
-                else
-                {
+                    
                     if (app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "COS"sv))
                     {
                         app.expression_append("COS ");
                     }
-                }
-                
-                if(!app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "CLEAR"sv))
-                {
-                    app.expression_clear();
-                }
-                else
-                {
+                    
                     if (app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "TAN"sv))
                     {
                         app.expression_append("TAN ");
                     }
                 }
+                ui::layout_end();
             }
-            ui::layout_end();
             
             if (ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "="sv))
             {

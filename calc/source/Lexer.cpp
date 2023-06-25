@@ -48,7 +48,7 @@ auto Lexer::take_next_token() -> Token
         result.precedence = TokenPrecedence::NONE;
     }
     
-    if (result.value == "SIN" || result.value == "COS" || result.value == "TAN")
+    if (result.value == "SIN" || result.value == "COS" || result.value == "TAN" || result.value == "SQRT")
     {
         result.type = TokenType::FUNCTION;
         result.precedence = TokenPrecedence::NONE;
@@ -72,13 +72,12 @@ auto Lexer::take_next_token() -> Token
             break;
             
         case '(':
-            result.type = TokenType::LEFT_PARENTESIS;
+            result.type = TokenType::LEFT_PARENTHESIS;
             result.fixity = TokenFixity::LEFT;
             result.precedence = TokenPrecedence::PRIMARY;
             break;
-        
         case ')':
-            result.type = TokenType::RIGHT_PARENTESIS;
+            result.type = TokenType::RIGHT_PARENTHESIS;
             result.fixity = TokenFixity::LEFT;
             result.precedence = TokenPrecedence::PRIMARY;
             break;
@@ -93,8 +92,6 @@ auto Lexer::take_next_token() -> Token
 
 auto logic::parse(Lexer lexer) -> std::vector<Token>
 {
-    auto localLexer = lexer;
-    
     std::vector<Token> tokens {};
     std::stack<Token> operators {};
     
@@ -119,7 +116,7 @@ auto logic::parse(Lexer lexer) -> std::vector<Token>
                 auto hasLowerPrecedence = currentToken.precedence < operators.top().precedence;
                 auto hasEqualPrecedence = currentToken.precedence == operators.top().precedence;
                 
-                if (operators.top().type == TokenType::LEFT_PARENTESIS || !(hasLowerPrecedence || (hasEqualPrecedence && currentToken.fixity == TokenFixity::LEFT)))
+                if (operators.top().type == TokenType::LEFT_PARENTHESIS || !(hasLowerPrecedence || (hasEqualPrecedence && currentToken.fixity == TokenFixity::LEFT)))
                 {
                     break;
                 }
@@ -133,16 +130,16 @@ auto logic::parse(Lexer lexer) -> std::vector<Token>
             operators.push(currentToken);
         }
         
-        if (currentToken.type == TokenType::LEFT_PARENTESIS)
+        if (currentToken.type == TokenType::LEFT_PARENTHESIS)
         {
             operators.push(currentToken);
         }
         
-        if (currentToken.type == TokenType::RIGHT_PARENTESIS)
+        if (currentToken.type == TokenType::RIGHT_PARENTHESIS)
         {
-            while (!operators.empty() && operators.top().type != TokenType::LEFT_PARENTESIS)
+            while (!operators.empty() && operators.top().type != TokenType::LEFT_PARENTHESIS)
             {
-                assert(!operators.empty() && "mismatching parentesis!");
+                assert(!operators.empty() && "mismatching parenthesis!");
                 
                 auto lastOperator = operators.top();
                 operators.pop();
@@ -150,7 +147,7 @@ auto logic::parse(Lexer lexer) -> std::vector<Token>
                 tokens.emplace_back(std::move(lastOperator));
             }
             
-            assert((!operators.empty() && operators.top().type == TokenType::LEFT_PARENTESIS) && "mismatching parentesis!");
+            assert((!operators.empty() && operators.top().type == TokenType::LEFT_PARENTHESIS) && "mismatching parenthesis!");
             operators.pop();
             
             if (!operators.empty() && operators.top().type == TokenType::FUNCTION)
@@ -165,6 +162,7 @@ auto logic::parse(Lexer lexer) -> std::vector<Token>
     
     std::ranges::for_each(std::ranges::iota_view { 0zu, operators.size() }, [&](auto)
     {
+        assert( operators.top().type != TokenType::LEFT_PARENTHESIS && "mismatching parenthesis!");
         tokens.push_back(operators.top());
         operators.pop();
     });
@@ -214,6 +212,11 @@ auto logic::evaluate(std::vector<Token> const& tokens) -> float
             if (token.value == "TAN")
             {
                 stack.push(std::tan(argument));
+            }
+            
+            if (token.value == "SQRT")
+            {
+                stack.push(std::sqrt(argument));
             }
         }
     }
