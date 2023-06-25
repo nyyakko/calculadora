@@ -1,9 +1,8 @@
 set(calc_SourceFiles "")
-set(calc_HeaderFiles "")
 
 add_subdirectory(source)
 
-add_executable(${PROJECT_NAME} ${calc_SourceFiles} ${calc_HeaderFiles})
+add_executable(${PROJECT_NAME} ${calc_SourceFiles})
 
 add_clang_tidy(${PROJECT_NAME})
 

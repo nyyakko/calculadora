@@ -1,6 +1,6 @@
 set(DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_subdirectory(Ui)
+add_subdirectory(ui)
 
 set(calc_SourceFiles ${calc_SourceFiles}
     "${DIR}/Main.cpp"

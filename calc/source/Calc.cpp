@@ -1,9 +1,9 @@
 #include "calc/Calc.hpp"
 
-#include "calc/Ui/Color.hpp"
-#include "calc/Ui/Gfx/Component.hpp"
-#include "calc/Ui/Gfx/Shape.hpp"
-#include "calc/Ui/Layout.hpp"
+#include "calc/ui/Color.hpp"
+#include "calc/ui/gfx/Component.hpp"
+#include "calc/ui/gfx/Shape.hpp"
+#include "calc/ui/Layout.hpp"
 
 using namespace std::literals;
 
