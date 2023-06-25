@@ -21,7 +21,7 @@ namespace ui
         std::vector<Rectangle> items;
     };
 
-    auto layout_begin(Orientation orientation, Rectangle container, size_t count) -> void;
-    auto layout_end() -> void;
-    auto layout_slot() -> Rectangle;
+    void layout_begin(Orientation orientation, Rectangle container, size_t count);
+    void layout_end();
+    Rectangle layout_slot();
 }

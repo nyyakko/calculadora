@@ -3,6 +3,7 @@
 #include <cassert>
 #include <string>
 #include <sstream>
+#include <vector>
 
 namespace logic
 {
@@ -29,13 +30,16 @@ namespace logic
             : stream { lhs.stream.str() }
         {}
         
-        auto operator=(Lexer const& lhs) -> Lexer;
+        Lexer operator=(Lexer const& lhs);
         
     public:
-        [[nodiscard]]auto take_next_token() -> Token;
-        [[nodiscard]]auto has_tokens() -> bool { return !stream.eof(); };
+        [[nodiscard]]Token take_next_token();
+        [[nodiscard]]bool has_tokens() { return !stream.eof(); };
         
     private:
         std::stringstream stream {};
     };
+    
+    std::vector<Token> parse(Lexer lexer);
+    float evaluate(std::vector<Token> const& tokens);
 }

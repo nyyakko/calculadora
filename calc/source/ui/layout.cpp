@@ -1,4 +1,4 @@
-#include "calc/ui/layout.hpp"
+#include "calc/Ui/Layout.hpp"
 
 #include <format>
 #include <iostream>
@@ -11,7 +11,7 @@ static inline auto& layout_stack()
     return stack;
 }
 
-auto ui::layout_begin(Orientation orientation, Rectangle container, size_t count) -> void
+void ui::layout_begin(Orientation orientation, Rectangle container, size_t count)
 {
     Layout layout
     {
@@ -25,17 +25,17 @@ auto ui::layout_begin(Orientation orientation, Rectangle container, size_t count
     layout_stack().push(std::move(layout));
 }
 
-auto ui::layout_end() -> void
+void ui::layout_end()
 {
     layout_stack().pop();
 }
 
-auto ui::layout_slot() -> Rectangle
+Rectangle ui::layout_slot()
 {
     if (!(layout_stack().top().items.size() < layout_stack().top().items.capacity()))
     {
         std::clog << std::stacktrace::current();
-        assert(false && "cannot push to stack, would overflow");
+        assert(false && "cannot push to stack, operation would overflow");
     }
     
     Rectangle rectangle;
