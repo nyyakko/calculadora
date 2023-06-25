@@ -40,7 +40,7 @@ auto Lexer::take_next_token() -> Token
     
     this->stream >> result.value;
     
-    auto fnIsDigit = [] (auto value) { return std::isdigit(value); };
+    auto fnIsDigit = [] (auto value) { return std::isdigit(value); }
     
     if (std::ranges::find_if(result.value, fnIsDigit) != std::end(result.value))
     {
