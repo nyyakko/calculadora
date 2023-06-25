@@ -37,16 +37,18 @@ auto Lexer::take_next_token() -> Token
     }
 
     Token result {};
-
+    
     this->stream >> result.value;
-
-    if (std::isdigit(result.value.front()))
+    
+    auto fnIsDigit = [] (auto value) { return std::isdigit(value); };
+    
+    if (std::ranges::find_if(result.value, fnIsDigit) != std::end(result.value))
     {
         result.type = TokenType::NUMBER;
         result.precedence = TokenPrecedence::NONE;
     }
 
-    if (std::ispunct(result.value.front()))
+    if (result.value.size() == 1 && std::ispunct(result.value.front()))
     {
         result.type = TokenType::OPERATOR;
 
