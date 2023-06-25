@@ -7,7 +7,7 @@
 
 namespace logic
 {
-    enum class TokenType { NUMBER, OPERATOR };
+    enum class TokenType { NUMBER, OPERATOR, FUNCTION, LEFT_PARENTESIS, RIGHT_PARENTESIS };
     enum class TokenPrecedence { NONE, TERTIARY, SECONDARY, PRIMARY };
     enum class TokenFixity { LEFT, RIGHT };
     

@@ -10,8 +10,19 @@ using namespace std::literals;
 auto static constexpr FONT_SIZE  = 24;
 auto static constexpr BUTTON_GAP = 4;
 
-void update([[maybe_unused]]Calc& app)
+void update(Calc& app)
 {
+    if (IsKeyPressed(KEY_LEFT_SHIFT) && !app.shiftMode)
+    {
+        app.shiftMode = true;
+    }
+    else
+    {
+        if (IsKeyPressed(KEY_LEFT_SHIFT) && app.shiftMode)
+        {
+            app.shiftMode = false;
+        }
+    }
 }
 
 void render(Calc& app)
@@ -26,19 +37,40 @@ void render(Calc& app)
         {
             ui::layout_begin(ui::Orientation::VERTICAL, ui::layout_slot(), 3);
             {
-                if (ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "POP"sv))
+                if (!app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "POP"sv))
                 {
                     app.expression_pop();
                 }
+                else
+                {
+                    if (app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "SIN"sv))
+                    {
+                        app.expression_append("SIN ");
+                    }
+                }
                 
-                if(ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "PUSH"sv))
+                if(!app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "PUSH"sv))
                 {
                     app.expression_push();
                 }
+                else
+                {
+                    if (app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "COS"sv))
+                    {
+                        app.expression_append("COS ");
+                    }
+                }
                 
-                if(ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "CLEAR"sv))
+                if(!app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "CLEAR"sv))
                 {
                     app.expression_clear();
+                }
+                else
+                {
+                    if (app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "TAN"sv))
+                    {
+                        app.expression_append("TAN ");
+                    }
                 }
             }
             ui::layout_end();
@@ -124,14 +156,20 @@ void render(Calc& app)
         
         ui::layout_begin(ui::Orientation::HORIZONTAL, ui::layout_slot(), 4);
         {
-            ui::gfx::rectangle(ui::layout_slot(), ui::color::OBSIDIAN);
-            
             if (ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "0"sv))
             {
                 app.expression_append("0");
             }
             
-            ui::gfx::rectangle(ui::layout_slot(), ui::color::OBSIDIAN);
+            if (ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "("sv))
+            {
+                app.expression_append("( ");
+            }
+            
+            if (ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, ")"sv))
+            {
+                app.expression_append(" )");
+            }
             
             if (ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "-"sv))
             {

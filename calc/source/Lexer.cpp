@@ -47,6 +47,12 @@ auto Lexer::take_next_token() -> Token
         result.type = TokenType::NUMBER;
         result.precedence = TokenPrecedence::NONE;
     }
+    
+    if (result.value == "SIN" || result.value == "COS" || result.value == "TAN")
+    {
+        result.type = TokenType::FUNCTION;
+        result.precedence = TokenPrecedence::NONE;
+    }
 
     if (result.value.size() == 1 && std::ispunct(result.value.front()))
     {
@@ -63,6 +69,18 @@ auto Lexer::take_next_token() -> Token
         case '/':
             result.fixity = TokenFixity::LEFT;
             result.precedence = TokenPrecedence::SECONDARY;
+            break;
+            
+        case '(':
+            result.type = TokenType::LEFT_PARENTESIS;
+            result.fixity = TokenFixity::LEFT;
+            result.precedence = TokenPrecedence::PRIMARY;
+            break;
+        
+        case ')':
+            result.type = TokenType::RIGHT_PARENTESIS;
+            result.fixity = TokenFixity::LEFT;
+            result.precedence = TokenPrecedence::PRIMARY;
             break;
             
         default:
@@ -89,6 +107,11 @@ auto logic::parse(Lexer lexer) -> std::vector<Token>
             tokens.push_back(currentToken);
         }
         
+        if (currentToken.type == TokenType::FUNCTION)
+        {
+            operators.push(currentToken);
+        }
+        
         if (currentToken.type == TokenType::OPERATOR)
         {
             while (!operators.empty())
@@ -96,7 +119,7 @@ auto logic::parse(Lexer lexer) -> std::vector<Token>
                 auto hasLowerPrecedence = currentToken.precedence < operators.top().precedence;
                 auto hasEqualPrecedence = currentToken.precedence == operators.top().precedence;
                 
-                if (!(hasLowerPrecedence || (hasEqualPrecedence && currentToken.fixity == TokenFixity::LEFT)))
+                if (operators.top().type == TokenType::LEFT_PARENTESIS || !(hasLowerPrecedence || (hasEqualPrecedence && currentToken.fixity == TokenFixity::LEFT)))
                 {
                     break;
                 }
@@ -108,6 +131,35 @@ auto logic::parse(Lexer lexer) -> std::vector<Token>
             }
             
             operators.push(currentToken);
+        }
+        
+        if (currentToken.type == TokenType::LEFT_PARENTESIS)
+        {
+            operators.push(currentToken);
+        }
+        
+        if (currentToken.type == TokenType::RIGHT_PARENTESIS)
+        {
+            while (!operators.empty() && operators.top().type != TokenType::LEFT_PARENTESIS)
+            {
+                assert(!operators.empty() && "mismatching parentesis!");
+                
+                auto lastOperator = operators.top();
+                operators.pop();
+                
+                tokens.emplace_back(std::move(lastOperator));
+            }
+            
+            assert((!operators.empty() && operators.top().type == TokenType::LEFT_PARENTESIS) && "mismatching parentesis!");
+            operators.pop();
+            
+            if (!operators.empty() && operators.top().type == TokenType::FUNCTION)
+            {
+                auto lastOperator = operators.top();
+                operators.pop();
+                
+                tokens.emplace_back(std::move(lastOperator));
+            }
         }
     }
     
@@ -142,6 +194,27 @@ auto logic::evaluate(std::vector<Token> const& tokens) -> float
             stack.pop();
 
             stack.push(operations[token.value.front()](lhs, rhs));
+        }
+        
+        if (token.type == TokenType::FUNCTION)
+        {
+            auto argument = stack.top();
+            stack.pop();
+            
+            if (token.value == "SIN")
+            {
+                stack.push(std::sin(argument));
+            }
+            
+            if (token.value == "COS")
+            {
+                stack.push(std::cos(argument));
+            }
+            
+            if (token.value == "TAN")
+            {
+                stack.push(std::tan(argument));
+            }
         }
     }
 

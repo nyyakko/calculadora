@@ -70,6 +70,8 @@ public:
 public:
     float width = {}, heigth = {};
     
+    bool shiftMode = false;
+    
     Expression expression {};
     std::stack<Expression> expressions {};
 };
