@@ -13,4 +13,5 @@ target_include_directories(${PROJECT_NAME}
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 23)
 target_compile_options(${PROJECT_NAME} PRIVATE -Werror -Wall -Wextra)
+target_link_options(${PROJECT_NAME} PRIVATE -Xlinker /subsystem:windows)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${calc_ExternalLibraries})
