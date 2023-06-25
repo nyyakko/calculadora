@@ -23,15 +23,6 @@
 
 namespace ui::gfx
 {
-    inline auto textbox(Color background, Color foreground, size_t fontSize, auto&& message, auto&&... arguments)
-    {
-        auto container = ui::layout_slot();
-        
-        DrawRectangle(container.x, container.y, container.width, container.height, background);
-        
-        DRAW_TEXT(container, fontSize, foreground, message, arguments...);
-    }
-    
     inline auto button(float buttonSpacing, size_t fontSize, Color background, Color foreground, auto&& message)
     {
         auto container = ui::layout_slot();

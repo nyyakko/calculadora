@@ -5,23 +5,23 @@
 #include <vector>
 #include <stack>
 #include <cmath>
-//
+
 namespace ui
 {
-    enum class Orientation
+    enum class LayoutOrientation
     {
         HORIZONTAL, VERTICAL
     };
     
     struct Layout
     {
-        Orientation orientation;
+        LayoutOrientation orientation;
         Rectangle container;
         
         std::vector<Rectangle> items;
     };
 
-    void layout_begin(Orientation orientation, Rectangle container, size_t count);
+    void layout_begin(LayoutOrientation orientation, Rectangle container, size_t count);
     void layout_end();
     Rectangle layout_slot();
 }

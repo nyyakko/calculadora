@@ -47,12 +47,6 @@ auto Lexer::take_next_token() -> Token
         result.type = TokenType::NUMBER;
         result.precedence = TokenPrecedence::NONE;
     }
-    
-    if (result.value == "SIN" || result.value == "COS" || result.value == "TAN" || result.value == "SQRT")
-    {
-        result.type = TokenType::FUNCTION;
-        result.precedence = TokenPrecedence::NONE;
-    }
 
     if (result.value.size() == 1 && std::ispunct(result.value.front()))
     {
@@ -60,31 +54,40 @@ auto Lexer::take_next_token() -> Token
 
         switch (result.value.front())
         {
-        case '+':
-        case '-':
-            result.precedence = TokenPrecedence::TERTIARY;
-            break;
+            case '+':
+            case '-':
+                result.precedence = TokenPrecedence::TERTIARY;
+                break;
 
-        case '*':
-        case '/':
-            result.fixity = TokenFixity::LEFT;
-            result.precedence = TokenPrecedence::SECONDARY;
-            break;
-            
-        case '(':
-            result.type = TokenType::LEFT_PARENTHESIS;
-            result.fixity = TokenFixity::LEFT;
-            result.precedence = TokenPrecedence::PRIMARY;
-            break;
-        case ')':
-            result.type = TokenType::RIGHT_PARENTHESIS;
-            result.fixity = TokenFixity::LEFT;
-            result.precedence = TokenPrecedence::PRIMARY;
-            break;
-            
-        default:
-            assert(false && "invalid token");
+            case '*':
+            case '/':
+                result.fixity = TokenFixity::LEFT;
+                result.precedence = TokenPrecedence::SECONDARY;
+                break;
+                
+            case ',':
+                result.type = TokenType::COMMA;
+                break;
+                
+            case '(':
+                result.type = TokenType::LEFT_PARENTHESIS;
+                result.precedence = TokenPrecedence::PRIMARY;
+                break;
+            case ')':
+                result.type = TokenType::RIGHT_PARENTHESIS;
+                result.precedence = TokenPrecedence::PRIMARY;
+                break;
+                
+            default:
+                assert(false && "invalid token");
         }
+    }
+    
+    if (result.value == "SIN"  || result.value == "COS" || result.value == "TAN" ||
+        result.value == "SQRT" || result.value == "LOG" || result.value == "POW")
+    {
+        result.type = TokenType::FUNCTION;
+        result.precedence = TokenPrecedence::NONE;
     }
 
     return result;
@@ -92,7 +95,7 @@ auto Lexer::take_next_token() -> Token
 
 auto logic::parse(Lexer lexer) -> std::vector<Token>
 {
-    std::vector<Token> tokens {};
+    std::vector<Token> expression {};
     std::stack<Token> operators {};
     
     while (lexer.has_tokens())
@@ -101,7 +104,7 @@ auto logic::parse(Lexer lexer) -> std::vector<Token>
         
         if (currentToken.type == TokenType::NUMBER)
         {
-            tokens.push_back(currentToken);
+            expression.push_back(currentToken);
         }
         
         if (currentToken.type == TokenType::FUNCTION)
@@ -113,10 +116,11 @@ auto logic::parse(Lexer lexer) -> std::vector<Token>
         {
             while (!operators.empty())
             {
+                auto isTopParenthesis   = operators.top().type == TokenType::LEFT_PARENTHESIS;
                 auto hasLowerPrecedence = currentToken.precedence < operators.top().precedence;
                 auto hasEqualPrecedence = currentToken.precedence == operators.top().precedence;
                 
-                if (operators.top().type == TokenType::LEFT_PARENTHESIS || !(hasLowerPrecedence || (hasEqualPrecedence && currentToken.fixity == TokenFixity::LEFT)))
+                if (isTopParenthesis || !(hasLowerPrecedence || (hasEqualPrecedence && currentToken.fixity == TokenFixity::LEFT)))
                 {
                     break;
                 }
@@ -124,10 +128,21 @@ auto logic::parse(Lexer lexer) -> std::vector<Token>
                 auto lastOperator = operators.top();
                 operators.pop();
                 
-                tokens.emplace_back(std::move(lastOperator));
+                expression.emplace_back(std::move(lastOperator));
             }
             
             operators.push(currentToken);
+        }
+        
+        if (currentToken.type == TokenType::COMMA)
+        {
+            while (!operators.empty() && operators.top().type != TokenType::LEFT_PARENTHESIS)
+            {
+                auto lastOperator = operators.top();
+                operators.pop();
+                
+                expression.emplace_back(std::move(lastOperator));
+            }
         }
         
         if (currentToken.type == TokenType::LEFT_PARENTHESIS)
@@ -144,7 +159,7 @@ auto logic::parse(Lexer lexer) -> std::vector<Token>
                 auto lastOperator = operators.top();
                 operators.pop();
                 
-                tokens.emplace_back(std::move(lastOperator));
+                expression.emplace_back(std::move(lastOperator));
             }
             
             assert((!operators.empty() && operators.top().type == TokenType::LEFT_PARENTHESIS) && "mismatching parenthesis!");
@@ -155,19 +170,19 @@ auto logic::parse(Lexer lexer) -> std::vector<Token>
                 auto lastOperator = operators.top();
                 operators.pop();
                 
-                tokens.emplace_back(std::move(lastOperator));
+                expression.emplace_back(std::move(lastOperator));
             }
         }
     }
     
     std::ranges::for_each(std::ranges::iota_view { 0zu, operators.size() }, [&](auto)
     {
-        assert( operators.top().type != TokenType::LEFT_PARENTHESIS && "mismatching parenthesis!");
-        tokens.push_back(operators.top());
+        assert(operators.top().type != TokenType::LEFT_PARENTHESIS && "mismatching parenthesis!");
+        expression.push_back(operators.top());
         operators.pop();
     });
     
-    return tokens;
+    return expression;
 }
 
 auto logic::evaluate(std::vector<Token> const& tokens) -> float
@@ -196,27 +211,35 @@ auto logic::evaluate(std::vector<Token> const& tokens) -> float
         
         if (token.type == TokenType::FUNCTION)
         {
-            auto argument = stack.top();
+            auto lhs = stack.top();
             stack.pop();
             
             if (token.value == "SIN")
             {
-                stack.push(std::sin(argument));
+                stack.push(std::sin(lhs));
             }
             
             if (token.value == "COS")
             {
-                stack.push(std::cos(argument));
+                stack.push(std::cos(lhs));
             }
             
             if (token.value == "TAN")
             {
-                stack.push(std::tan(argument));
+                stack.push(std::tan(lhs));
             }
             
             if (token.value == "SQRT")
             {
-                stack.push(std::sqrt(argument));
+                stack.push(std::sqrt(lhs));
+            }
+            
+            if (token.value == "POW")
+            {
+                auto rhs = stack.top();
+                stack.pop();
+                
+                stack.push(std::pow(lhs, rhs));
             }
         }
     }

@@ -11,7 +11,7 @@ static inline auto& layout_stack()
     return stack;
 }
 
-void ui::layout_begin(Orientation orientation, Rectangle container, size_t count)
+void ui::layout_begin(LayoutOrientation orientation, Rectangle container, size_t count)
 {
     Layout layout
     {
@@ -45,7 +45,7 @@ Rectangle ui::layout_slot()
     
     switch (root.orientation)
     {
-        case Orientation::HORIZONTAL:
+        case LayoutOrientation::HORIZONTAL:
             rectangle.width  = std::ceilf(container.width / root.items.capacity());
             rectangle.height = container.height;
             rectangle.x      = container.x + std::ceilf((container.width / root.items.capacity()) * root.items.size());
@@ -53,7 +53,7 @@ Rectangle ui::layout_slot()
             
             break;
         
-        case Orientation::VERTICAL:
+        case LayoutOrientation::VERTICAL:
             rectangle.width  = container.width;
             rectangle.height = std::ceilf(container.height / root.items.capacity());
             rectangle.x      = container.x;
