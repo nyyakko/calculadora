@@ -12,13 +12,13 @@
 #define FNMACRO_BEG do{
 #define FNMACRO_END } while(0)
 
-#define DRAW_TEXT(CONTAINER, FONTSIZE, COLOR, FMT, ...)                                                                                            \
-        FNMACRO_BEG                                                                                                                                \
-            auto const positionX = (CONTAINER.x + (CONTAINER.width / 2)) - MeasureText(message.data(), GetFontDefault().baseSize) - message.size();\
-            auto const positionY = (CONTAINER.y + (CONTAINER.height / 2)) - GetFontDefault().baseSize;                                             \
-            auto const position  = Vector2 { positionX, positionY };                                                                               \
-                                                                                                                                                   \
-            DrawText(fmt::format(fmt::runtime(FMT), __VA_ARGS__).data(), position.x, position.y, FONTSIZE, COLOR);                                 \
+#define DRAW_TEXT(CONTAINER, FONTSIZE, COLOR, FMT, ...)                                                                                     \
+        FNMACRO_BEG                                                                                                                         \
+            auto const positionX = (CONTAINER.x + (CONTAINER.width / 2)) - MeasureText(FMT.data(), GetFontDefault().baseSize) - FMT.size(); \
+            auto const positionY = (CONTAINER.y + (CONTAINER.height / 2)) - GetFontDefault().baseSize;                                      \
+            auto const position  = Vector2 { positionX, positionY };                                                                        \
+                                                                                                                                            \
+            DrawText(fmt::format(fmt::runtime(FMT), __VA_ARGS__).data(), position.x, position.y, FONTSIZE, COLOR);                          \
         FNMACRO_END
 
 namespace ui::gfx

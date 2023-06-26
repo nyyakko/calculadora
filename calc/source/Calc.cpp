@@ -25,7 +25,7 @@ void update(Calc& app)
     }
 }
 
-void expression_manipulation(Calc& app)
+void expression_manipulations(Calc& app)
 {
     ui::layout_begin(ui::LayoutOrientation::VERTICAL, ui::layout_slot(), 3);
     {
@@ -47,21 +47,21 @@ void expression_manipulation(Calc& app)
     ui::layout_end();
 }
 
-void functions(Calc& app)
+void expression_functions(Calc& app)
 {
     ui::layout_begin(ui::LayoutOrientation::VERTICAL, ui::layout_slot(), 3);
     {
-        if (app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "SIN"sv))
+        if (ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "SIN"sv))
         {
             app.expression_append("SIN ");
         }
         
-        if (app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "COS"sv))
+        if (ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "COS"sv))
         {
             app.expression_append("COS ");
         }
         
-        if (app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "TAN"sv))
+        if (ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "TAN"sv))
         {
             app.expression_append("TAN ");
         }
@@ -70,17 +70,17 @@ void functions(Calc& app)
     
     ui::layout_begin(ui::LayoutOrientation::VERTICAL, ui::layout_slot(), 3);
     {
-        if (app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "SQRT"sv))
+        if (ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "SQRT"sv))
         {
             app.expression_append("SQRT ");
         }
         
-        if (app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "LOG"sv))
+        if (ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "LOG"sv))
         {
             app.expression_append("LOG ");
         }
         
-        if (app.shiftMode && ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "POW"sv))
+        if (ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "POW"sv))
         {
             app.expression_append("POW ");
         }
@@ -100,7 +100,7 @@ void render(Calc& app)
         {
             if (!app.shiftMode)
             {
-                expression_manipulation(app);
+                expression_manipulations(app);
                 
                 if (ui::gfx::button(BUTTON_GAP, FONT_SIZE, ui::color::CHARCOAL, RAYWHITE, "="sv))
                 {
@@ -109,7 +109,7 @@ void render(Calc& app)
             }
             else
             {
-                functions(app);
+                expression_functions(app);
             }
         }
         ui::layout_end();
